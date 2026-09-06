@@ -1,0 +1,321 @@
+{
+  "users": [
+    {
+      "id": "usr_admin_ashiraf",
+      "fullName": "Ashiraf (Admin)",
+      "username": "ashiraf",
+      "phone": "+256773319479",
+      "email": "ashirafashes04@gmail.com",
+      "role": "admin",
+      "status": "active",
+      "referralCode": "ASHIRAF77",
+      "passwordHash": "03a192d6c1724434805e5cc06ab5a4126e1dcf680618c887162579607f06f2f0",
+      "salt": "1e3478c646d578a80658ba6ea5ba07d5",
+      "createdAt": "2026-09-06T17:02:51.954Z",
+      "updatedAt": "2026-09-06T19:17:26.366Z"
+    },
+    {
+      "id": "usr_3b48214c3d0c",
+      "fullName": "Alice Walker",
+      "username": "alicew",
+      "phone": "+256770000002",
+      "email": "alice@example.com",
+      "role": "user",
+      "status": "pending_activation",
+      "referralCode": "ALIC3B6B",
+      "withdrawalPhone": "+256770000002",
+      "passwordHash": "95899f1b37f6b04c52767db9698077bdcbca5e35f7ef8fdeaa73c0286ddef0eb",
+      "salt": "b0816aa0dbc50082e2d0036401c20229",
+      "createdAt": "2026-09-06T19:17:26.367Z",
+      "updatedAt": "2026-09-06T19:17:26.367Z"
+    },
+    {
+      "id": "usr_d4965bd9c952",
+      "fullName": "Bob Mukasa",
+      "username": "bobm",
+      "phone": "+256770000003",
+      "email": "bob@example.com",
+      "role": "user",
+      "status": "pending_activation",
+      "referralCode": "BOBMCFD9",
+      "referredBy": "usr_3b48214c3d0c",
+      "withdrawalPhone": "+256770000003",
+      "passwordHash": "3f68c64b1676d3e7b6eefbaa3e3eca6c19969e1db62416e7893905b0491e24ef",
+      "salt": "47940902fdffabf6c3228e3b4585c2ec",
+      "createdAt": "2026-09-06T19:17:28.984Z",
+      "updatedAt": "2026-09-06T19:17:28.984Z"
+    }
+  ],
+  "wallets": {
+    "usr_admin_ashiraf": {
+      "userId": "usr_admin_ashiraf",
+      "availableBalance": 0,
+      "dailyEarningsBalance": 0,
+      "referralEarningsBalance": 0,
+      "bonusBalance": 1000,
+      "pendingWithdrawalsBalance": 0,
+      "totalEarnings": 1000,
+      "updatedAt": "2026-09-06T19:00:00.000Z"
+    },
+    "usr_3b48214c3d0c": {
+      "userId": "usr_3b48214c3d0c",
+      "availableBalance": 5000,
+      "dailyEarningsBalance": 0,
+      "referralEarningsBalance": 5000,
+      "bonusBalance": 1000,
+      "pendingWithdrawalsBalance": 0,
+      "totalEarnings": 6000,
+      "updatedAt": "2026-09-06T19:17:34.522Z"
+    },
+    "usr_d4965bd9c952": {
+      "userId": "usr_d4965bd9c952",
+      "availableBalance": 0,
+      "dailyEarningsBalance": 0,
+      "referralEarningsBalance": 0,
+      "bonusBalance": 1000,
+      "pendingWithdrawalsBalance": 0,
+      "totalEarnings": 1000,
+      "updatedAt": "2026-09-06T19:17:28.984Z"
+    }
+  },
+  "tasks": [
+    {
+      "id": "task_vid_01",
+      "title": "Watch & Review MTN MoMo Pay Promo",
+      "description": "Watch the full 30-second official MTN Merchant promo video to verify consumer awareness.",
+      "category": "video",
+      "rewardUgx": 1200,
+      "timeEstimateSeconds": 30,
+      "requirements": "Watch continuously without switching tabs. Submit confirmation when timer ends.",
+      "dailyLimit": 2,
+      "remainingToday": 2,
+      "isActive": true,
+      "iconType": "PlayCircle",
+      "mediaUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1",
+      "createdAt": "2026-09-06T17:02:51.953Z"
+    },
+    {
+      "id": "task_spin_01",
+      "title": "Daily Lucky Wheel of Cash",
+      "description": "Spin the verified Pesa Cash reward wheel once every 24 hours. Guaranteed win between UGX 200 to UGX 2,500.",
+      "category": "spin",
+      "rewardUgx": 800,
+      "timeEstimateSeconds": 10,
+      "requirements": "Active accounts only. One spin per day.",
+      "dailyLimit": 1,
+      "remainingToday": 1,
+      "isActive": true,
+      "iconType": "RotateCcw",
+      "createdAt": "2026-09-06T17:02:51.953Z"
+    },
+    {
+      "id": "task_survey_01",
+      "title": "Mobile Banking & Fintech Survey 2026",
+      "description": "Complete 3 simple questions about your preferred digital payments in Uganda.",
+      "category": "survey",
+      "rewardUgx": 2500,
+      "timeEstimateSeconds": 60,
+      "requirements": "Answer all 3 market research questions honestly.",
+      "dailyLimit": 1,
+      "remainingToday": 1,
+      "isActive": true,
+      "iconType": "FileQuestion",
+      "surveyQuestions": [
+        {
+          "question": "Which mobile money network do you use most often in Uganda?",
+          "options": [
+            "MTN Mobile Money",
+            "Airtel Money",
+            "Both equally",
+            "Commercial Bank Mobile App"
+          ]
+        },
+        {
+          "question": "How frequently do you pay merchants using cashless QR or MoMo Pay codes?",
+          "options": [
+            "Daily",
+            "Weekly",
+            "A few times a month",
+            "Rarely or Cash only"
+          ]
+        },
+        {
+          "question": "What is most important to you in a rewards and agency platform?",
+          "options": [
+            "Instant withdrawal processing",
+            "Reliable customer support",
+            "Highest task earnings",
+            "Referral commissions"
+          ]
+        }
+      ],
+      "createdAt": "2026-09-06T17:02:51.953Z"
+    },
+    {
+      "id": "task_ad_01",
+      "title": "View Stanbic FlexiPay Partner Showcase",
+      "description": "Browse the partner announcement banner for 15 seconds to learn about zero-fee utility bills.",
+      "category": "ad",
+      "rewardUgx": 650,
+      "timeEstimateSeconds": 15,
+      "requirements": "Keep the ad display open for 15 seconds.",
+      "dailyLimit": 3,
+      "remainingToday": 3,
+      "isActive": true,
+      "iconType": "Tv",
+      "createdAt": "2026-09-06T17:02:51.953Z"
+    },
+    {
+      "id": "task_special_01",
+      "title": "Agency Knowledge & Security Quiz",
+      "description": "Test your understanding of PIN security and anti-phishing practices for mobile money agents.",
+      "category": "special",
+      "rewardUgx": 3000,
+      "timeEstimateSeconds": 90,
+      "requirements": "Score 100% on the 2-question security hygiene quiz.",
+      "dailyLimit": 1,
+      "remainingToday": 1,
+      "isActive": true,
+      "iconType": "ShieldCheck",
+      "surveyQuestions": [
+        {
+          "question": "Will Pesa Cash or Mobile Money agents ever ask you for your Secret PIN or OTP?",
+          "options": [
+            "Never under any circumstance",
+            "Only during system upgrades",
+            "Yes if calling from customer care",
+            "Only via SMS"
+          ]
+        },
+        {
+          "question": "Where should activation payments be confirmed?",
+          "options": [
+            "Only through authoritative provider webhooks / system status",
+            "Sending a forged screenshot",
+            "Social media DM",
+            "Unverified SMS"
+          ]
+        }
+      ],
+      "createdAt": "2026-09-06T17:02:51.953Z"
+    }
+  ],
+  "taskCompletions": [],
+  "referrals": [
+    {
+      "id": "ref_f205383c6b8b",
+      "referrerId": "usr_3b48214c3d0c",
+      "referredUserId": "usr_d4965bd9c952",
+      "refereeId": "usr_d4965bd9c952",
+      "refereeName": "Bob Mukasa",
+      "refereeUsername": "bobm",
+      "refereePhone": "+256770000003",
+      "rewardAmount": 5000,
+      "commissionAmountUgx": 5000,
+      "status": "COMPLETED",
+      "qualifyingStatus": "COMPLETED",
+      "timestamp": "2026-09-06T19:17:28.984Z",
+      "creditedAt": "2026-09-06T19:17:28.984Z",
+      "createdAt": "2026-09-06T19:17:28.984Z"
+    }
+  ],
+  "withdrawals": [],
+  "notifications": [
+    {
+      "id": "notif_94f3a59eed1a",
+      "userId": "usr_3b48214c3d0c",
+      "title": "🎉 Referral Reward Credited! (+UGX 5,000)",
+      "message": "Awesome! @bobm joined using your referral link. UGX 5,000 has been credited directly to your balance!",
+      "type": "referral_reward",
+      "isRead": false,
+      "createdAt": "2026-09-06T19:17:28.984Z"
+    },
+    {
+      "id": "notif_254c88b3cf56",
+      "userId": "usr_3b48214c3d0c",
+      "title": "🎁 Welcome Bonus: UGX 1,000 Credited!",
+      "message": "You have been awarded a UGX 1,000 new account starter bonus!",
+      "type": "bonus",
+      "isRead": false,
+      "createdAt": "2026-09-06T19:17:26.367Z"
+    },
+    {
+      "id": "notif_914a9e442d43",
+      "userId": "usr_3b48214c3d0c",
+      "title": "Welcome to Pesa Cash!",
+      "message": "Your account is created and pending activation. Complete the one-time UGX 10,000 Mobile Money activation to unlock daily tasks & payouts.",
+      "type": "activation",
+      "isRead": false,
+      "createdAt": "2026-09-06T19:17:26.367Z"
+    },
+    {
+      "id": "notif_826e54148777",
+      "userId": "usr_d4965bd9c952",
+      "title": "🎁 Welcome Bonus: UGX 1,000 Credited!",
+      "message": "You have been awarded a UGX 1,000 new account starter bonus!",
+      "type": "bonus",
+      "isRead": false,
+      "createdAt": "2026-09-06T19:17:28.984Z"
+    },
+    {
+      "id": "notif_06843c5862f0",
+      "userId": "usr_d4965bd9c952",
+      "title": "Welcome to Pesa Cash!",
+      "message": "Your account is created and pending activation. Complete the one-time UGX 10,000 Mobile Money activation to unlock daily tasks & payouts.",
+      "type": "activation",
+      "isRead": false,
+      "createdAt": "2026-09-06T19:17:28.984Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "txn_c85c03acdc9a",
+      "userId": "usr_3b48214c3d0c",
+      "category": "referral_earnings",
+      "type": "credit",
+      "amountUgx": 5000,
+      "title": "Referral Sign-Up Bonus",
+      "description": "Reward for user @bobm signing up with your link",
+      "status": "confirmed",
+      "transactionId": "REF_1788722248984",
+      "createdAt": "2026-09-06T19:17:28.984Z"
+    },
+    {
+      "id": "txn_3dabce80d4f3",
+      "userId": "usr_3b48214c3d0c",
+      "category": "bonus",
+      "type": "credit",
+      "amountUgx": 1000,
+      "title": "Welcome Bonus",
+      "description": "New account welcome bonus",
+      "status": "confirmed",
+      "transactionId": "BONUS_1788722246367",
+      "createdAt": "2026-09-06T19:17:26.367Z"
+    },
+    {
+      "id": "txn_a667dd2cb30b",
+      "userId": "usr_d4965bd9c952",
+      "category": "bonus",
+      "type": "credit",
+      "amountUgx": 1000,
+      "title": "Welcome Bonus",
+      "description": "New account welcome bonus",
+      "status": "confirmed",
+      "transactionId": "BONUS_1788722248984",
+      "createdAt": "2026-09-06T19:17:28.984Z"
+    }
+  ],
+  "auditLogs": [],
+  "sessions": {
+    "53a62934fcbc167852bbdc166434d293f91f9a8f88c8b3509ad369041ea6edc8": "usr_3b48214c3d0c",
+    "fe3c31b4d06ffd77b262f65e993ddd3d21502cb206192bfd47bc31029116b59c": "usr_d4965bd9c952"
+  },
+  "systemSettings": {
+    "maintenanceMode": false,
+    "maintenanceMessage": "Pesa Cash is undergoing scheduled system optimization to improve instant payment processing. We will be back online shortly.",
+    "estimatedEndTime": "",
+    "allowAdminAccess": true,
+    "updatedAt": "2026-09-06T19:00:00.000Z",
+    "updatedBy": "system"
+  }
+}

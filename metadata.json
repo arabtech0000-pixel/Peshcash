@@ -1,0 +1,6 @@
+{
+  "name": "Pesa Cash",
+  "description": "Uganda's premier verified rewards and money agency platform with instant mobile money withdrawals, verified task rewards, and secure activations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
