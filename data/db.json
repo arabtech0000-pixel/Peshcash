@@ -9,10 +9,10 @@
       "role": "admin",
       "status": "active",
       "referralCode": "ASHIRAF77",
-      "passwordHash": "3ad9c147d975058642042b29263fcc231c680590657d494cff9dad733be0bcca",
-      "salt": "25af97581024bfc1b70988b60e195de8",
+      "passwordHash": "9f8c2e4b464f611b111fc0caaee7636bd9a0a967d9f68d3f15bc23ef40bab371",
+      "salt": "862682cca0d5a705da1ae4be81665c0d",
       "createdAt": "2026-09-06T17:02:51.954Z",
-      "updatedAt": "2026-09-07T04:44:36.688Z"
+      "updatedAt": "2026-09-07T04:51:18.155Z"
     },
     {
       "id": "usr_3b48214c3d0c",
@@ -163,7 +163,7 @@
       "bonusBalance": 1000,
       "pendingWithdrawalsBalance": 0,
       "totalEarnings": 11000,
-      "updatedAt": "2026-09-07T04:38:12.986Z"
+      "updatedAt": "2026-09-07T04:44:56.614Z"
     },
     "usr_3b48214c3d0c": {
       "userId": "usr_3b48214c3d0c",
