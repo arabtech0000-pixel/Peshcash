@@ -24,9 +24,8 @@ import {
   SystemSettings
 } from './src/types.ts';
 
-async function startServer() {
+export function createApp(): express.Express {
   const app = express();
-  const PORT = 3000;
 
   app.use(express.json());
 
@@ -1677,6 +1676,13 @@ async function startServer() {
     return res.json({ success: true, settings: db.systemSettings });
   });
 
+  return app;
+}
+
+export async function startServer() {
+  const app = createApp();
+  const PORT = 3000;
+
   // ----------------------------------------------------
   // VITE MIDDLEWARE (DEV) & STATIC (PROD)
   // ----------------------------------------------------
@@ -1700,4 +1706,7 @@ async function startServer() {
   });
 }
 
-startServer();
+// Only start standalone server if not running in serverless environment
+if (!process.env.VERCEL && !process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  startServer();
+}

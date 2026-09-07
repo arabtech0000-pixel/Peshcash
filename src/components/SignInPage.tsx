@@ -211,9 +211,13 @@ export const SignInPage: React.FC<SignInPageProps> = ({
         localStorage.removeItem('pendingReferralCode');
       } catch (e) {}
 
-      // Sync Realtime Database & Firestore
-      await syncUserRealtimeRecord(res.user, res.wallet);
-      await syncUserFirestoreRecord(res.user, res.wallet);
+      // Sync Realtime Database & Firestore safely
+      try {
+        await syncUserRealtimeRecord(res.user, res.wallet);
+      } catch (e) {}
+      try {
+        await syncUserFirestoreRecord(res.user, res.wallet);
+      } catch (e) {}
 
       setStoredToken(res.token);
       onSuccess(res.user, res.wallet);

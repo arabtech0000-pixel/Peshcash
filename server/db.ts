@@ -15,10 +15,14 @@ import {
   SystemSettings
 } from '../src/types.ts';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const DB_FILE = path.join(DATA_DIR, 'db.json');
+const IS_SERVERLESS = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const BASE_DATA_DIR = path.join(process.cwd(), 'data');
+const BASE_DB_FILE = path.join(BASE_DATA_DIR, 'db.json');
 
-interface DatabaseSchema {
+const RUNTIME_DATA_DIR = IS_SERVERLESS ? path.join('/tmp', 'pesa_data') : BASE_DATA_DIR;
+const RUNTIME_DB_FILE = IS_SERVERLESS ? path.join(RUNTIME_DATA_DIR, 'db.json') : BASE_DB_FILE;
+
+export interface DatabaseSchema {
   users: (User & { passwordHash: string; salt: string })[];
   wallets: Record<string, Wallet>;
   tasks: Task[];
@@ -47,8 +51,12 @@ export function verifyPassword(password: string, hash: string, salt: string): bo
 let db: DatabaseSchema;
 
 function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+  if (!fs.existsSync(RUNTIME_DATA_DIR)) {
+    try {
+      fs.mkdirSync(RUNTIME_DATA_DIR, { recursive: true });
+    } catch (e) {
+      console.warn('Could not create RUNTIME_DATA_DIR, using in-memory', e);
+    }
   }
 }
 
@@ -179,9 +187,10 @@ function loadInitialSeed(): DatabaseSchema {
 export function initDb() {
   ensureDataDir();
   let loadedFromDisk = false;
-  if (fs.existsSync(DB_FILE)) {
+  const targetReadFile = fs.existsSync(RUNTIME_DB_FILE) ? RUNTIME_DB_FILE : (fs.existsSync(BASE_DB_FILE) ? BASE_DB_FILE : null);
+  if (targetReadFile) {
     try {
-      const content = fs.readFileSync(DB_FILE, 'utf-8');
+      const content = fs.readFileSync(targetReadFile, 'utf-8');
       db = JSON.parse(content);
       loadedFromDisk = true;
     } catch (e) {
@@ -263,9 +272,9 @@ function ensureAdminAccount() {
 export function saveDb() {
   ensureDataDir();
   try {
-    fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2), 'utf-8');
+    fs.writeFileSync(RUNTIME_DB_FILE, JSON.stringify(db, null, 2), 'utf-8');
   } catch (e) {
-    console.error('Failed to save db.json', e);
+    console.warn('Could not save to disk, keeping state in-memory:', e);
   }
 }
 

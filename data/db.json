@@ -9,10 +9,10 @@
       "role": "admin",
       "status": "active",
       "referralCode": "ASHIRAF77",
-      "passwordHash": "0a99c014503fe963e5673a302fae825fdb7a81ca91a48b68620f7644f2570346",
-      "salt": "b5e4a50bf63a6eed2518cf16d03c112e",
+      "passwordHash": "4aada672f473e7577c767aba54e25504417158f93a57855b9002f826ef454243",
+      "salt": "efa3c5efefe8bf0e44570f2bff366f67",
       "createdAt": "2026-09-06T17:02:51.954Z",
-      "updatedAt": "2026-09-07T04:22:00.725Z"
+      "updatedAt": "2026-09-07T04:34:41.503Z"
     },
     {
       "id": "usr_3b48214c3d0c",
@@ -90,18 +90,65 @@
       "salt": "0396c0092d6b97fa05be7b026429067d",
       "createdAt": "2026-09-07T04:26:09.429Z",
       "updatedAt": "2026-09-07T04:26:09.429Z"
+    },
+    {
+      "id": "usr_e0d2f93f4337",
+      "fullName": "Ashes",
+      "username": "ashes",
+      "phone": "+256751295786",
+      "email": "arabtech0003@gmail.com",
+      "role": "user",
+      "status": "pending_activation",
+      "referralCode": "ASHE9E41",
+      "referredBy": "usr_admin_ashiraf",
+      "withdrawalPhone": "+256751295786",
+      "passwordHash": "8f6ce3de2fcde3ab6943a36437423e02ad9b9254add5bb59c3f09ca4d6cf921c",
+      "salt": "a2b339e31e04736adde5029b5e283065",
+      "createdAt": "2026-09-07T04:30:13.311Z",
+      "updatedAt": "2026-09-07T04:30:13.311Z"
+    },
+    {
+      "id": "usr_0b606dc45e75",
+      "fullName": "Ashes24",
+      "username": "ashes24",
+      "phone": "+256751295786",
+      "email": "arabtech00004@gmail.com",
+      "role": "user",
+      "status": "pending_activation",
+      "referralCode": "ASHEA9D0",
+      "referredBy": "usr_admin_ashiraf",
+      "withdrawalPhone": "+256751295786",
+      "passwordHash": "3339c8a4df805f898b1d1170f6f4717f5c73197b92038baabb6cc78f1332a110",
+      "salt": "c307dac61ac94c91059b811f2c510e99",
+      "createdAt": "2026-09-07T04:34:37.320Z",
+      "updatedAt": "2026-09-07T04:34:37.320Z"
+    },
+    {
+      "id": "usr_aa47fb148d2e",
+      "fullName": "Mukiibi Ivan",
+      "username": "mukiibi",
+      "phone": "+256701889900",
+      "email": "mukiibi@gmail.com",
+      "role": "user",
+      "status": "pending_activation",
+      "referralCode": "MUKI60CE",
+      "withdrawalPhone": "+256701889900",
+      "passwordHash": "60b975909d2344a069a919cb098b7d8d76c00ce54d7735c9d18def65935b6106",
+      "salt": "d8f5505051178a94457beac77de7658a",
+      "createdAt": "2026-09-07T04:34:41.504Z",
+      "updatedAt": "2026-09-07T04:34:41.504Z"
     }
   ],
   "wallets": {
     "usr_admin_ashiraf": {
       "userId": "usr_admin_ashiraf",
-      "availableBalance": 0,
+      "availableBalance": 10000,
       "dailyEarningsBalance": 0,
-      "referralEarningsBalance": 0,
+      "referralEarningsBalance": 10000,
       "bonusBalance": 1000,
       "pendingWithdrawalsBalance": 0,
-      "totalEarnings": 1000,
-      "updatedAt": "2026-09-06T19:00:00.000Z"
+      "totalEarnings": 11000,
+      "updatedAt": "2026-09-07T04:34:37.320Z"
     },
     "usr_3b48214c3d0c": {
       "userId": "usr_3b48214c3d0c",
@@ -152,6 +199,36 @@
       "pendingWithdrawalsBalance": 0,
       "totalEarnings": 1000,
       "updatedAt": "2026-09-07T04:26:09.429Z"
+    },
+    "usr_e0d2f93f4337": {
+      "userId": "usr_e0d2f93f4337",
+      "availableBalance": 0,
+      "dailyEarningsBalance": 0,
+      "referralEarningsBalance": 0,
+      "bonusBalance": 1000,
+      "pendingWithdrawalsBalance": 0,
+      "totalEarnings": 1000,
+      "updatedAt": "2026-09-07T04:30:13.311Z"
+    },
+    "usr_0b606dc45e75": {
+      "userId": "usr_0b606dc45e75",
+      "availableBalance": 0,
+      "dailyEarningsBalance": 0,
+      "referralEarningsBalance": 0,
+      "bonusBalance": 1000,
+      "pendingWithdrawalsBalance": 0,
+      "totalEarnings": 1000,
+      "updatedAt": "2026-09-07T04:34:37.320Z"
+    },
+    "usr_aa47fb148d2e": {
+      "userId": "usr_aa47fb148d2e",
+      "availableBalance": 0,
+      "dailyEarningsBalance": 0,
+      "referralEarningsBalance": 0,
+      "bonusBalance": 1000,
+      "pendingWithdrawalsBalance": 0,
+      "totalEarnings": 1000,
+      "updatedAt": "2026-09-07T04:34:41.504Z"
     }
   },
   "tasks": [
@@ -279,6 +356,38 @@
   "taskCompletions": [],
   "referrals": [
     {
+      "id": "ref_67a90fcf51d6",
+      "referrerId": "usr_admin_ashiraf",
+      "referredUserId": "usr_0b606dc45e75",
+      "refereeId": "usr_0b606dc45e75",
+      "refereeName": "Ashes24",
+      "refereeUsername": "ashes24",
+      "refereePhone": "+256751295786",
+      "rewardAmount": 5000,
+      "commissionAmountUgx": 5000,
+      "status": "COMPLETED",
+      "qualifyingStatus": "COMPLETED",
+      "timestamp": "2026-09-07T04:34:37.320Z",
+      "creditedAt": "2026-09-07T04:34:37.320Z",
+      "createdAt": "2026-09-07T04:34:37.320Z"
+    },
+    {
+      "id": "ref_b68fd9092266",
+      "referrerId": "usr_admin_ashiraf",
+      "referredUserId": "usr_e0d2f93f4337",
+      "refereeId": "usr_e0d2f93f4337",
+      "refereeName": "Ashes",
+      "refereeUsername": "ashes",
+      "refereePhone": "+256751295786",
+      "rewardAmount": 5000,
+      "commissionAmountUgx": 5000,
+      "status": "COMPLETED",
+      "qualifyingStatus": "COMPLETED",
+      "timestamp": "2026-09-07T04:30:13.311Z",
+      "creditedAt": "2026-09-07T04:30:13.311Z",
+      "createdAt": "2026-09-07T04:30:13.311Z"
+    },
+    {
       "id": "ref_715ae5209e90",
       "referrerId": "usr_6977869c7fb4",
       "referredUserId": "usr_44f53a7ebeae",
@@ -313,6 +422,24 @@
   ],
   "withdrawals": [],
   "notifications": [
+    {
+      "id": "notif_41ba12880fbc",
+      "userId": "usr_admin_ashiraf",
+      "title": "🎉 Referral Reward Credited! (+UGX 5,000)",
+      "message": "Awesome! @ashes24 joined using your referral link. UGX 5,000 has been credited directly to your balance!",
+      "type": "referral_reward",
+      "isRead": false,
+      "createdAt": "2026-09-07T04:34:37.320Z"
+    },
+    {
+      "id": "notif_95d02ccf2d51",
+      "userId": "usr_admin_ashiraf",
+      "title": "🎉 Referral Reward Credited! (+UGX 5,000)",
+      "message": "Awesome! @ashes joined using your referral link. UGX 5,000 has been credited directly to your balance!",
+      "type": "referral_reward",
+      "isRead": false,
+      "createdAt": "2026-09-07T04:30:13.311Z"
+    },
     {
       "id": "notif_bb8ad7e5765f",
       "userId": "usr_6977869c7fb4",
@@ -420,9 +547,87 @@
       "type": "activation",
       "isRead": false,
       "createdAt": "2026-09-07T04:26:09.429Z"
+    },
+    {
+      "id": "notif_e17380630a44",
+      "userId": "usr_e0d2f93f4337",
+      "title": "🎁 Welcome Bonus: UGX 1,000 Credited!",
+      "message": "You have been awarded a UGX 1,000 new account starter bonus!",
+      "type": "bonus",
+      "isRead": false,
+      "createdAt": "2026-09-07T04:30:13.311Z"
+    },
+    {
+      "id": "notif_9438d3e94351",
+      "userId": "usr_e0d2f93f4337",
+      "title": "Welcome to Pesa Cash!",
+      "message": "Your account is created and pending activation. Complete the one-time UGX 10,000 Mobile Money activation to unlock daily tasks & payouts.",
+      "type": "activation",
+      "isRead": false,
+      "createdAt": "2026-09-07T04:30:13.311Z"
+    },
+    {
+      "id": "notif_7ca47743380d",
+      "userId": "usr_0b606dc45e75",
+      "title": "🎁 Welcome Bonus: UGX 1,000 Credited!",
+      "message": "You have been awarded a UGX 1,000 new account starter bonus!",
+      "type": "bonus",
+      "isRead": false,
+      "createdAt": "2026-09-07T04:34:37.320Z"
+    },
+    {
+      "id": "notif_e44a7de57794",
+      "userId": "usr_0b606dc45e75",
+      "title": "Welcome to Pesa Cash!",
+      "message": "Your account is created and pending activation. Complete the one-time UGX 10,000 Mobile Money activation to unlock daily tasks & payouts.",
+      "type": "activation",
+      "isRead": false,
+      "createdAt": "2026-09-07T04:34:37.320Z"
+    },
+    {
+      "id": "notif_6c9ae0b7ef9b",
+      "userId": "usr_aa47fb148d2e",
+      "title": "🎁 Welcome Bonus: UGX 1,000 Credited!",
+      "message": "You have been awarded a UGX 1,000 new account starter bonus!",
+      "type": "bonus",
+      "isRead": false,
+      "createdAt": "2026-09-07T04:34:41.504Z"
+    },
+    {
+      "id": "notif_5dd39d62f0c2",
+      "userId": "usr_aa47fb148d2e",
+      "title": "Welcome to Pesa Cash!",
+      "message": "Your account is created and pending activation. Complete the one-time UGX 10,000 Mobile Money activation to unlock daily tasks & payouts.",
+      "type": "activation",
+      "isRead": false,
+      "createdAt": "2026-09-07T04:34:41.504Z"
     }
   ],
   "transactions": [
+    {
+      "id": "txn_955c6ff4f08f",
+      "userId": "usr_admin_ashiraf",
+      "category": "referral_earnings",
+      "type": "credit",
+      "amountUgx": 5000,
+      "title": "Referral Sign-Up Bonus",
+      "description": "Reward for user @ashes24 signing up with your link",
+      "status": "confirmed",
+      "transactionId": "REF_1788755677320",
+      "createdAt": "2026-09-07T04:34:37.320Z"
+    },
+    {
+      "id": "txn_4054a3e7ab79",
+      "userId": "usr_admin_ashiraf",
+      "category": "referral_earnings",
+      "type": "credit",
+      "amountUgx": 5000,
+      "title": "Referral Sign-Up Bonus",
+      "description": "Reward for user @ashes signing up with your link",
+      "status": "confirmed",
+      "transactionId": "REF_1788755413312",
+      "createdAt": "2026-09-07T04:30:13.311Z"
+    },
     {
       "id": "txn_7d39686b756d",
       "userId": "usr_6977869c7fb4",
@@ -506,6 +711,42 @@
       "status": "confirmed",
       "transactionId": "BONUS_1788755169429",
       "createdAt": "2026-09-07T04:26:09.429Z"
+    },
+    {
+      "id": "txn_32194a88a54e",
+      "userId": "usr_e0d2f93f4337",
+      "category": "bonus",
+      "type": "credit",
+      "amountUgx": 1000,
+      "title": "Welcome Bonus",
+      "description": "New account welcome bonus",
+      "status": "confirmed",
+      "transactionId": "BONUS_1788755413312",
+      "createdAt": "2026-09-07T04:30:13.311Z"
+    },
+    {
+      "id": "txn_831c140b429b",
+      "userId": "usr_0b606dc45e75",
+      "category": "bonus",
+      "type": "credit",
+      "amountUgx": 1000,
+      "title": "Welcome Bonus",
+      "description": "New account welcome bonus",
+      "status": "confirmed",
+      "transactionId": "BONUS_1788755677320",
+      "createdAt": "2026-09-07T04:34:37.320Z"
+    },
+    {
+      "id": "txn_fff5c5223511",
+      "userId": "usr_aa47fb148d2e",
+      "category": "bonus",
+      "type": "credit",
+      "amountUgx": 1000,
+      "title": "Welcome Bonus",
+      "description": "New account welcome bonus",
+      "status": "confirmed",
+      "transactionId": "BONUS_1788755681504",
+      "createdAt": "2026-09-07T04:34:41.504Z"
     }
   ],
   "auditLogs": [],
@@ -515,7 +756,10 @@
     "b34e8d44686081431f52a703d8c13b6872084550cb2beea40507863a4b017978": "usr_0db5b448b0fe",
     "7ae1225c99cfe35be787f4d78157f1914d830fd228ba5af4e66baf3569b073b1": "usr_6977869c7fb4",
     "fdfb8500b664a5f5afb02eb2c30cdce30dbe89617ea966cb9ac090983ba0d44d": "usr_44f53a7ebeae",
-    "9a85ea161354f589cad543badacf622997e6b09864b3515f8634e820190acad6": "usr_6977869c7fb4"
+    "9a85ea161354f589cad543badacf622997e6b09864b3515f8634e820190acad6": "usr_6977869c7fb4",
+    "01730b71e8f695e3d42fb08c8c598586d1d4546df36044f7e8a99722eaa14370": "usr_e0d2f93f4337",
+    "3bea930df23387a5c9edc7979405f2a4fa52469224dbd747246b81bab21c07c7": "usr_0b606dc45e75",
+    "27d0665ce770de8f329d3c4ad7f5816fb0e7e192d5f3453699fbb9e786f74469": "usr_aa47fb148d2e"
   },
   "systemSettings": {
     "maintenanceMode": false,
