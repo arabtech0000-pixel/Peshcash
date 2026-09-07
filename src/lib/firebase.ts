@@ -275,3 +275,316 @@ export async function recordFirestoreReferralTransaction(
   }
 }
 
+// ----------------------------------------------------
+// DIRECT FIREBASE CLIENT AUTH & SYNC (FALLBACK MODE)
+// ----------------------------------------------------
+
+export async function validateDirectReferralCode(code: string): Promise<{ valid: boolean; referrerUsername?: string; referrerName?: string; referrerId?: string; message?: string }> {
+  if (!code || !code.trim()) return { valid: false, message: 'Please enter a referral code' };
+  const cleanCode = code.trim().toUpperCase();
+
+  try {
+    // 1. Check Firestore
+    const usersRef = collection(firestore, 'users');
+    const q = query(usersRef, where('referralCode', '==', cleanCode));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      const docSnap = querySnapshot.docs[0];
+      const data = docSnap.data();
+      return {
+        valid: true,
+        referrerId: docSnap.id,
+        referrerUsername: data.username || 'Agent',
+        referrerName: data.fullName || data.username || 'Agent',
+        message: `Verified sponsor: @${data.username || data.fullName}`
+      };
+    }
+
+    // 2. Check RTDB
+    const rtdbUsersRef = ref(rtdb, DB_PATHS.USERS);
+    const rtdbSnap = await get(rtdbUsersRef);
+    if (rtdbSnap.exists()) {
+      const allUsers = rtdbSnap.val();
+      for (const uid in allUsers) {
+        if (allUsers[uid]?.referralCode?.toUpperCase() === cleanCode) {
+          const u = allUsers[uid];
+          return {
+            valid: true,
+            referrerId: uid,
+            referrerUsername: u.username || 'Agent',
+            referrerName: u.fullName || u.username || 'Agent',
+            message: `Verified sponsor: @${u.username || u.fullName}`
+          };
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('validateDirectReferralCode error:', e);
+  }
+
+  return { valid: false, message: 'Invalid or unrecognized referral code' };
+}
+
+export async function registerDirectFirebase(params: {
+  fullName: string;
+  username: string;
+  phone: string;
+  email: string;
+  password: string;
+  referralCode?: string;
+}): Promise<{ token: string; user: any; wallet: any }> {
+  const { fullName, username, phone, email, password, referralCode } = params;
+
+  // 1. Create Firebase Auth user
+  let authUser: FirebaseUser;
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    authUser = cred.user;
+    await updateProfile(authUser, { displayName: fullName || username });
+  } catch (authErr: any) {
+    if (authErr.code === 'auth/email-already-in-use') {
+      // Try signing in instead
+      try {
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        authUser = cred.user;
+      } catch (signInErr: any) {
+        throw new Error('An account with this email already exists. Please sign in or use a different email.');
+      }
+    } else {
+      throw new Error(authErr.message || 'Firebase Auth registration failed');
+    }
+  }
+
+  const userId = authUser.uid;
+  const generatedRefCode = username.replace(/[^a-zA-Z0-9]/g, '').slice(0, 4).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
+
+  // 2. Validate referral if provided
+  let referrerId: string | null = null;
+  if (referralCode && referralCode.trim()) {
+    const validation = await validateDirectReferralCode(referralCode.trim());
+    if (validation.valid && validation.referrerId && validation.referrerId !== userId) {
+      referrerId = validation.referrerId;
+    }
+  }
+
+  const now = new Date().toISOString();
+  const user = {
+    id: userId,
+    fullName: fullName || username,
+    username: username.toLowerCase().replace(/[^a-z0-9_]/g, ''),
+    phone: phone.trim(),
+    email: email.trim(),
+    role: 'user',
+    status: 'pending_activation',
+    referralCode: generatedRefCode,
+    referredBy: referrerId || undefined,
+    withdrawalPhone: phone.trim(),
+    createdAt: now,
+    updatedAt: now
+  };
+
+  const wallet = {
+    userId,
+    availableBalance: 0,
+    dailyEarningsBalance: 0,
+    referralEarningsBalance: 0,
+    bonusBalance: 1000,
+    pendingWithdrawalsBalance: 0,
+    totalEarnings: 1000,
+    updatedAt: now
+  };
+
+  // 3. Save to Firestore
+  try {
+    await setDoc(doc(firestore, 'users', userId), {
+      ...user,
+      balance: wallet.availableBalance,
+      referralEarnings: wallet.referralEarningsBalance,
+      totalEarnings: wallet.totalEarnings,
+      updatedAt: firestoreTimestamp()
+    }, { merge: true });
+  } catch (e) {
+    console.warn('Error saving user to Firestore:', e);
+  }
+
+  // 4. Save to Realtime Database
+  try {
+    await update(ref(rtdb, `${DB_PATHS.USERS}/${userId}`), user);
+    await update(ref(rtdb, `${DB_PATHS.WALLETS}/${userId}`), wallet);
+    
+    // Welcome Bonus Notification & Transaction
+    const notifRef = push(ref(rtdb, `${DB_PATHS.NOTIFICATIONS}/${userId}`));
+    await set(notifRef, {
+      id: notifRef.key,
+      userId,
+      title: '🎁 Welcome Bonus: UGX 1,000 Credited!',
+      message: 'You have been awarded a UGX 1,000 new account starter bonus!',
+      type: 'bonus',
+      isRead: false,
+      createdAt: now
+    });
+
+    const txRef = push(ref(rtdb, `${DB_PATHS.TRANSACTIONS}/${userId}`));
+    await set(txRef, {
+      id: txRef.key,
+      userId,
+      category: 'bonus',
+      type: 'credit',
+      amountUgx: 1000,
+      title: 'Welcome Bonus',
+      description: 'New account welcome starter bonus',
+      status: 'confirmed',
+      transactionId: 'BONUS_' + Date.now(),
+      createdAt: now
+    });
+  } catch (e) {
+    console.warn('Error saving to Realtime Database:', e);
+  }
+
+  // 5. Credit referrer if applicable (UGX 5,000)
+  if (referrerId) {
+    try {
+      await recordFirestoreReferralTransaction(referrerId, userId, 5000);
+      
+      // Credit in RTDB
+      const referrerWalletRef = ref(rtdb, `${DB_PATHS.WALLETS}/${referrerId}`);
+      const rSnap = await get(referrerWalletRef);
+      if (rSnap.exists()) {
+        const rWallet = rSnap.val();
+        await update(referrerWalletRef, {
+          availableBalance: (rWallet.availableBalance || 0) + 5000,
+          referralEarningsBalance: (rWallet.referralEarningsBalance || 0) + 5000,
+          totalEarnings: (rWallet.totalEarnings || 0) + 5000,
+          updatedAt: now
+        });
+      }
+
+      // Notify Referrer
+      const refNotif = push(ref(rtdb, `${DB_PATHS.NOTIFICATIONS}/${referrerId}`));
+      await set(refNotif, {
+        id: refNotif.key,
+        userId: referrerId,
+        title: '🎉 Referral Reward Credited! (+UGX 5,000)',
+        message: `Awesome! @${user.username} joined using your referral link. UGX 5,000 has been credited directly to your balance!`,
+        type: 'referral_reward',
+        isRead: false,
+        createdAt: now
+      });
+
+      const refTx = push(ref(rtdb, `${DB_PATHS.TRANSACTIONS}/${referrerId}`));
+      await set(refTx, {
+        id: refTx.key,
+        userId: referrerId,
+        category: 'referral_earnings',
+        type: 'credit',
+        amountUgx: 5000,
+        title: 'Referral Sign-Up Bonus',
+        description: `Reward for @${user.username} signing up with your invite code`,
+        status: 'confirmed',
+        transactionId: 'REF_' + Date.now(),
+        createdAt: now
+      });
+    } catch (refErr) {
+      console.warn('Direct referral crediting warning:', refErr);
+    }
+  }
+
+  // Cache locally
+  try {
+    localStorage.setItem('pesa_cached_user', JSON.stringify(user));
+    localStorage.setItem('pesa_cached_wallet', JSON.stringify(wallet));
+    localStorage.setItem('pesa_has_account', 'true');
+  } catch (e) {}
+
+  return { token: userId, user, wallet };
+}
+
+export async function loginDirectFirebase(identifier: string, pass: string): Promise<{ token: string; user: any; wallet: any }> {
+  let emailToUse = identifier;
+
+  // If not email, search in Firestore/RTDB
+  if (!identifier.includes('@')) {
+    try {
+      const q = query(collection(firestore, 'users'), where('username', '==', identifier.toLowerCase().trim()));
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        emailToUse = snap.docs[0].data().email;
+      } else {
+        const qPhone = query(collection(firestore, 'users'), where('phone', '==', identifier.trim()));
+        const snapPhone = await getDocs(qPhone);
+        if (!snapPhone.empty) {
+          emailToUse = snapPhone.docs[0].data().email;
+        }
+      }
+    } catch (e) {}
+  }
+
+  // Sign in via Firebase Auth
+  const cred = await signInWithEmailAndPassword(auth, emailToUse, pass);
+  const userId = cred.user.uid;
+
+  // Retrieve user doc from Firestore / RTDB
+  let user: any = null;
+  let wallet: any = null;
+
+  try {
+    const userDoc = await getDoc(doc(firestore, 'users', userId));
+    if (userDoc.exists()) {
+      user = userDoc.data();
+    }
+  } catch (e) {}
+
+  if (!user) {
+    try {
+      const rSnap = await get(ref(rtdb, `${DB_PATHS.USERS}/${userId}`));
+      if (rSnap.exists()) {
+        user = rSnap.val();
+      }
+    } catch (e) {}
+  }
+
+  if (!user) {
+    user = {
+      id: userId,
+      fullName: cred.user.displayName || 'Member',
+      username: (cred.user.email?.split('@')[0] || 'user').toLowerCase(),
+      email: cred.user.email,
+      phone: '',
+      role: 'user',
+      status: 'active',
+      referralCode: (cred.user.displayName || 'USER').slice(0, 4).toUpperCase() + '1000',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  try {
+    const wSnap = await get(ref(rtdb, `${DB_PATHS.WALLETS}/${userId}`));
+    if (wSnap.exists()) {
+      wallet = wSnap.val();
+    }
+  } catch (e) {}
+
+  if (!wallet) {
+    wallet = {
+      userId,
+      availableBalance: user.balance || 0,
+      dailyEarningsBalance: 0,
+      referralEarningsBalance: user.referralEarnings || 0,
+      bonusBalance: 1000,
+      pendingWithdrawalsBalance: 0,
+      totalEarnings: user.totalEarnings || 1000,
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  try {
+    localStorage.setItem('pesa_cached_user', JSON.stringify(user));
+    localStorage.setItem('pesa_cached_wallet', JSON.stringify(wallet));
+    localStorage.setItem('pesa_has_account', 'true');
+  } catch (e) {}
+
+  return { token: userId, user, wallet };
+}
+
+

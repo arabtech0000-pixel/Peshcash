@@ -171,8 +171,8 @@ export const SignInPage: React.FC<SignInPageProps> = ({
       setErrorMessage('Please enter a valid email address');
       return;
     }
-    if (!password) {
-      setErrorMessage('Please enter a password');
+    if (!password || password.length < 6) {
+      setErrorMessage('Password must be at least 6 characters');
       return;
     }
     if (password !== confirmPassword) {

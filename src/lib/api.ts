@@ -1,4 +1,9 @@
 // Pesa Cash API Client
+import {
+  registerDirectFirebase,
+  loginDirectFirebase,
+  validateDirectReferralCode
+} from './firebase.ts';
 
 const TOKEN_KEY = 'pesa_cash_token';
 
@@ -25,22 +30,79 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const res = await fetch(endpoint, {
-    ...options,
-    headers
-  });
+  let res: Response;
+  try {
+    res = await fetch(endpoint, {
+      ...options,
+      headers
+    });
+  } catch (netErr: any) {
+    const err = new Error(netErr?.message || 'Network connection error. Please check your internet connection.');
+    (err as any).isNetworkError = true;
+    throw err;
+  }
 
-  const data = await res.json();
+  const text = await res.text();
+  let data: any;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    // Non-JSON response (e.g. HTML 404 from static host/Vercel or gateway 502/503)
+    const isHtml = text.trim().startsWith('<') || text.includes('<!DOCTYPE') || text.includes('The page could not be found');
+    const message = isHtml
+      ? (res.status === 404 ? 'Service endpoint not found on server (404)' : `Server returned HTML status ${res.status}`)
+      : (text.slice(0, 150) || `Server error (${res.status})`);
+    
+    const err = new Error(message);
+    (err as any).status = res.status;
+    (err as any).isHtmlResponse = true;
+    (err as any).rawText = text;
+    throw err;
+  }
+
   if (!res.ok) {
-    throw new Error(data.message || data.error || 'An error occurred with the request');
+    const err = new Error(data?.message || data?.error || `Request failed with status ${res.status}`);
+    (err as any).status = res.status;
+    (err as any).data = data;
+    throw err;
   }
   return data;
 }
 
 export const api = {
   // Auth
-  register: (body: any) => request<any>('/api/auth/register', { method: 'POST', body: JSON.stringify(body) }),
-  login: (body: any) => request<any>('/api/auth/login', { method: 'POST', body: JSON.stringify(body) }),
+  register: async (body: any) => {
+    try {
+      return await request<any>('/api/auth/register', { method: 'POST', body: JSON.stringify(body) });
+    } catch (err: any) {
+      // If endpoint returned 404 / HTML (e.g. on static Vercel host without backend API), fallback to direct Firebase registration
+      if (err.isHtmlResponse || err.status === 404 || err.isNetworkError) {
+        console.warn('Backend API endpoint unavailable, falling back to direct Firebase registration...');
+        return await registerDirectFirebase({
+          fullName: body.fullName || body.username,
+          username: body.username,
+          phone: body.phone,
+          email: body.email,
+          password: body.password,
+          referralCode: body.referralCode
+        });
+      }
+      throw err;
+    }
+  },
+
+  login: async (body: any) => {
+    try {
+      return await request<any>('/api/auth/login', { method: 'POST', body: JSON.stringify(body) });
+    } catch (err: any) {
+      if (err.isHtmlResponse || err.status === 404 || err.isNetworkError) {
+        console.warn('Backend API endpoint unavailable, falling back to direct Firebase login...');
+        return await loginDirectFirebase(body.identifier, body.password);
+      }
+      throw err;
+    }
+  },
+
   firebaseLogin: (body: { uid: string; email: string; displayName?: string; photoUrl?: string; phone?: string; referralCode?: string }) =>
     request<any>('/api/auth/firebase-login', { method: 'POST', body: JSON.stringify(body) }),
   logout: () => request<any>('/api/auth/logout', { method: 'POST' }),
@@ -68,7 +130,16 @@ export const api = {
   // Referrals
   getReferrals: () => request<any>('/api/referrals'),
   getReferralStats: () => request<any>('/api/referrals'),
-  validateReferralCode: (code: string) => request<{ valid: boolean; referrerUsername?: string; referrerName?: string; message?: string }>(`/api/referrals/validate/${encodeURIComponent(code)}`),
+  validateReferralCode: async (code: string) => {
+    try {
+      return await request<{ valid: boolean; referrerUsername?: string; referrerName?: string; message?: string }>(`/api/referrals/validate/${encodeURIComponent(code)}`);
+    } catch (err: any) {
+      if (err.isHtmlResponse || err.status === 404 || err.isNetworkError) {
+        return await validateDirectReferralCode(code);
+      }
+      throw err;
+    }
+  },
 
   // System & Maintenance
   getSystemSettings: () => request<{ settings: any }>('/api/system/settings'),
