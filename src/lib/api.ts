@@ -2,7 +2,10 @@
 import {
   registerDirectFirebase,
   loginDirectFirebase,
-  validateDirectReferralCode
+  validateDirectReferralCode,
+  getDirectCurrentUser,
+  getDirectTasks,
+  getDirectNotifications
 } from './firebase.ts';
 
 const TOKEN_KEY = 'pesa_cash_token';
@@ -105,8 +108,26 @@ export const api = {
 
   firebaseLogin: (body: { uid: string; email: string; displayName?: string; photoUrl?: string; phone?: string; referralCode?: string }) =>
     request<any>('/api/auth/firebase-login', { method: 'POST', body: JSON.stringify(body) }),
-  logout: () => request<any>('/api/auth/logout', { method: 'POST' }),
-  me: () => request<any>('/api/auth/me'),
+  logout: async () => {
+    try {
+      await request<any>('/api/auth/logout', { method: 'POST' });
+    } catch (e) {}
+    clearStoredToken();
+    try {
+      localStorage.removeItem('pesa_cached_user');
+      localStorage.removeItem('pesa_cached_wallet');
+    } catch (e) {}
+  },
+  me: async () => {
+    try {
+      return await request<any>('/api/auth/me');
+    } catch (err: any) {
+      if (err.isHtmlResponse || err.status === 404 || err.isNetworkError || err.status === 401) {
+        return await getDirectCurrentUser();
+      }
+      throw err;
+    }
+  },
   forgotPassword: (identifier: string) => request<any>('/api/auth/forgot-password', { method: 'POST', body: JSON.stringify({ identifier }) }),
   updateProfile: (body: any) => request<any>('/api/auth/update-profile', { method: 'POST', body: JSON.stringify(body) }),
   changePassword: (body: any) => request<any>('/api/auth/change-password', { method: 'POST', body: JSON.stringify(body) }),
@@ -117,13 +138,32 @@ export const api = {
   checkActivationStatus: () => request<any>('/api/activation/status', { method: 'POST' }),
 
   // Tasks
-  getTasks: () => request<any>('/api/tasks'),
+  getTasks: async () => {
+    try {
+      return await request<any>('/api/tasks');
+    } catch (err: any) {
+      if (err.isHtmlResponse || err.status === 404 || err.isNetworkError) {
+        return await getDirectTasks();
+      }
+      throw err;
+    }
+  },
   completeTask: (id: string, proofData?: any) =>
     request<any>(`/api/tasks/${id}/complete`, { method: 'POST', body: JSON.stringify({ proofData }) }),
   playSpin: () => request<any>('/api/tasks/spin/play', { method: 'POST' }),
 
   // Wallet & Withdrawals
-  getWallet: () => request<any>('/api/wallet'),
+  getWallet: async () => {
+    try {
+      return await request<any>('/api/wallet');
+    } catch (err: any) {
+      if (err.isHtmlResponse || err.status === 404 || err.isNetworkError) {
+        const { wallet } = await getDirectCurrentUser();
+        return { wallet, recentTransactions: [], withdrawals: [] };
+      }
+      throw err;
+    }
+  },
   requestWithdrawal: (body: { amount: number; provider: string; mobileNumber: string }) =>
     request<any>('/api/withdrawals/request', { method: 'POST', body: JSON.stringify(body) }),
 
@@ -142,7 +182,27 @@ export const api = {
   },
 
   // System & Maintenance
-  getSystemSettings: () => request<{ settings: any }>('/api/system/settings'),
+  getSystemSettings: async () => {
+    try {
+      return await request<{ settings: any }>('/api/system/settings');
+    } catch (err: any) {
+      return {
+        settings: {
+          activationFeeUgx: 23000,
+          welcomeBonusUgx: 1000,
+          referralBonusUgx: 5000,
+          maintenanceMode: false,
+          allowSignups: true,
+          allowWithdrawals: true,
+          spinWheelCostUgx: 1000,
+          dailyFreeSpins: 1,
+          depositAccountName: 'PESA CASH UG LIMITED',
+          depositAccountNumber: '+256701889900',
+          depositNetwork: 'Airtel Money / MTN Mobile Money'
+        }
+      };
+    }
+  },
   getAdminSystemSettings: () => request<{ settings: any }>('/api/admin/system/settings'),
   updateAdminSystemSettings: (body: any) =>
     request<{ success: boolean; settings: any }>('/api/admin/system/settings', { method: 'POST', body: JSON.stringify(body) }),
@@ -152,7 +212,13 @@ export const api = {
     request<any>(category && category !== 'all' ? `/api/history?category=${category}` : '/api/history'),
   getTransactionHistory: (category?: string) =>
     request<any>(category && category !== 'all' ? `/api/history?category=${category}` : '/api/history'),
-  getNotifications: () => request<any>('/api/notifications'),
+  getNotifications: async () => {
+    try {
+      return await request<any>('/api/notifications');
+    } catch (err: any) {
+      return await getDirectNotifications();
+    }
+  },
   markNotificationsRead: () => request<any>('/api/notifications/mark-read', { method: 'POST' }),
 
   // Admin

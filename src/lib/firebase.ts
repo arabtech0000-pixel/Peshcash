@@ -587,4 +587,196 @@ export async function loginDirectFirebase(identifier: string, pass: string): Pro
   return { token: userId, user, wallet };
 }
 
+export async function getDirectCurrentUser(token?: string): Promise<{ user: any; wallet: any }> {
+  let cachedUser: any = null;
+  let cachedWallet: any = null;
+  try {
+    const uStr = localStorage.getItem('pesa_cached_user');
+    const wStr = localStorage.getItem('pesa_cached_wallet');
+    if (uStr) cachedUser = JSON.parse(uStr);
+    if (wStr) cachedWallet = JSON.parse(wStr);
+  } catch (e) {}
+
+  const uid = token || auth.currentUser?.uid || cachedUser?.id;
+  if (!uid) {
+    if (cachedUser) {
+      return {
+        user: cachedUser,
+        wallet: cachedWallet || {
+          userId: cachedUser.id,
+          availableBalance: 0,
+          dailyEarningsBalance: 0,
+          referralEarningsBalance: 0,
+          bonusBalance: 1000,
+          pendingWithdrawalsBalance: 0,
+          totalEarnings: 1000,
+          updatedAt: new Date().toISOString()
+        }
+      };
+    }
+    throw new Error('Not authenticated');
+  }
+
+  let user = cachedUser;
+  let wallet = cachedWallet;
+
+  try {
+    const userDoc = await getDoc(doc(firestore, 'users', uid));
+    if (userDoc.exists()) {
+      user = { id: uid, ...userDoc.data() };
+    }
+  } catch (e) {}
+
+  if (!user) {
+    try {
+      const snap = await get(ref(rtdb, `${DB_PATHS.USERS}/${uid}`));
+      if (snap.exists()) {
+        user = { id: uid, ...snap.val() };
+      }
+    } catch (e) {}
+  }
+
+  try {
+    const wSnap = await get(ref(rtdb, `${DB_PATHS.WALLETS}/${uid}`));
+    if (wSnap.exists()) {
+      wallet = wSnap.val();
+    }
+  } catch (e) {}
+
+  if (!user && auth.currentUser) {
+    user = {
+      id: uid,
+      fullName: auth.currentUser.displayName || 'Member',
+      username: (auth.currentUser.email?.split('@')[0] || 'user').toLowerCase(),
+      email: auth.currentUser.email || '',
+      phone: '',
+      role: 'user',
+      status: 'pending_activation',
+      referralCode: (auth.currentUser.displayName || 'USER').slice(0, 4).toUpperCase() + '1000',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  if (!wallet && user) {
+    wallet = {
+      userId: user.id,
+      availableBalance: user.balance || 0,
+      dailyEarningsBalance: 0,
+      referralEarningsBalance: user.referralEarnings || 0,
+      bonusBalance: 1000,
+      pendingWithdrawalsBalance: 0,
+      totalEarnings: user.totalEarnings || 1000,
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  if (user) {
+    try {
+      localStorage.setItem('pesa_cached_user', JSON.stringify(user));
+      if (wallet) localStorage.setItem('pesa_cached_wallet', JSON.stringify(wallet));
+    } catch (e) {}
+  }
+
+  if (!user) throw new Error('User not found');
+  return { user, wallet };
+}
+
+export async function getDirectTasks(userId?: string): Promise<{ tasks: any[]; accountActive: boolean }> {
+  const defaultTasks = [
+    {
+      id: 'task_app_review',
+      title: 'Rate & Review Financial Literacy Guide',
+      category: 'survey',
+      rewardUgx: 2500,
+      dailyLimit: 2,
+      instructions: 'Submit a genuine short feedback rating for the financial literacy educational guide.',
+      requiresProof: true,
+      proofType: 'text',
+      isActive: true,
+      timeEstimate: '2 mins'
+    },
+    {
+      id: 'task_tiktok_share',
+      title: 'TikTok Brand Video Engagement',
+      category: 'tiktok',
+      rewardUgx: 3500,
+      dailyLimit: 3,
+      instructions: 'Watch, like, and share the official Pesa Cash educational video on TikTok.',
+      requiresProof: true,
+      proofType: 'screenshot',
+      isActive: true,
+      timeEstimate: '1 min'
+    },
+    {
+      id: 'task_youtube_sub',
+      title: 'YouTube Agency Channel Subscribe',
+      category: 'youtube',
+      rewardUgx: 4000,
+      dailyLimit: 2,
+      instructions: 'Subscribe to Pesa Cash Official YouTube channel and watch the welcome tutorial.',
+      requiresProof: true,
+      proofType: 'screenshot',
+      isActive: true,
+      timeEstimate: '3 mins'
+    },
+    {
+      id: 'task_whatsapp_status',
+      title: 'WhatsApp Daily Promotion Status',
+      category: 'whatsapp',
+      rewardUgx: 5000,
+      dailyLimit: 1,
+      instructions: 'Post your referral banner and link to your WhatsApp Status for at least 6 hours.',
+      requiresProof: true,
+      proofType: 'screenshot',
+      isActive: true,
+      timeEstimate: '1 min'
+    }
+  ];
+
+  let accountActive = false;
+  if (userId) {
+    try {
+      const uSnap = await get(ref(rtdb, `${DB_PATHS.USERS}/${userId}`));
+      if (uSnap.exists() && uSnap.val()?.status === 'active') {
+        accountActive = true;
+      }
+    } catch (e) {}
+  }
+
+  return {
+    tasks: defaultTasks.map(t => ({ ...t, remainingToday: t.dailyLimit })),
+    accountActive
+  };
+}
+
+export async function getDirectNotifications(userId?: string): Promise<{ notifications: any[]; unreadCount: number }> {
+  if (!userId) return { notifications: [], unreadCount: 0 };
+  try {
+    const snap = await get(ref(rtdb, `${DB_PATHS.NOTIFICATIONS}/${userId}`));
+    if (snap.exists()) {
+      const notifsObj = snap.val();
+      const list = Object.values(notifsObj).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      const unreadCount = list.filter((n: any) => !n.isRead).length;
+      return { notifications: list, unreadCount };
+    }
+  } catch (e) {}
+
+  return {
+    notifications: [
+      {
+        id: 'notif_welcome',
+        userId,
+        title: '🎁 Welcome Bonus: UGX 1,000 Credited!',
+        message: 'You have been awarded a UGX 1,000 new account starter bonus!',
+        type: 'bonus',
+        isRead: false,
+        createdAt: new Date().toISOString()
+      }
+    ],
+    unreadCount: 1
+  };
+}
+
+
 

@@ -220,6 +220,9 @@ export default function App() {
     try {
       localStorage.setItem('pesa_has_account', 'true');
       setHasAccountOnDevice(true);
+      if (window.location.pathname.startsWith('/signup') || window.location.search.includes('ref=')) {
+        window.history.replaceState({}, '', '/');
+      }
     } catch (e) {}
     setUser(loggedInUser);
     setWallet(initialWallet);
