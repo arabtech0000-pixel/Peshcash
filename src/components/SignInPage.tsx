@@ -127,24 +127,17 @@ export const SignInPage: React.FC<SignInPageProps> = ({
         password: loginPassword
       });
 
-      // Try Firebase email login in parallel if identifier is an email
-      if (loginIdentifier.includes('@')) {
-        try {
-          await loginWithFirebaseEmail(loginIdentifier.trim(), loginPassword);
-        } catch (fbErr: any) {
-          try {
-            await registerWithFirebaseEmail(loginIdentifier.trim(), loginPassword, res.user.fullName || res.user.username);
-          } catch (e) {}
-        }
-      }
-
-      // Mark device as having an account
+      // Mark device as having an account immediately
       try {
         localStorage.setItem('pesa_has_account', 'true');
       } catch (e) {}
 
-      // Sync Realtime Database
-      await syncUserRealtimeRecord(res.user, res.wallet);
+      // Fire background syncs non-blockingly
+      if (loginIdentifier.includes('@')) {
+        loginWithFirebaseEmail(loginIdentifier.trim(), loginPassword).catch(() => {});
+      }
+      syncUserRealtimeRecord(res.user, res.wallet).catch(() => {});
+      syncUserFirestoreRecord(res.user, res.wallet).catch(() => {});
 
       setStoredToken(res.token);
       onSuccess(res.user, res.wallet);
@@ -197,27 +190,15 @@ export const SignInPage: React.FC<SignInPageProps> = ({
         termsAccepted
       });
 
-      // Also register in Firebase Auth
-      try {
-        await registerWithFirebaseEmail(email.trim(), password, username.trim());
-      } catch (fbErr: any) {
-        try {
-          await loginWithFirebaseEmail(email.trim(), password);
-        } catch (e) {}
-      }
-
       // Clear pending referral code upon successful registration
       try {
         localStorage.removeItem('pendingReferralCode');
       } catch (e) {}
 
-      // Sync Realtime Database & Firestore safely
-      try {
-        await syncUserRealtimeRecord(res.user, res.wallet);
-      } catch (e) {}
-      try {
-        await syncUserFirestoreRecord(res.user, res.wallet);
-      } catch (e) {}
+      // Non-blocking background syncs
+      registerWithFirebaseEmail(email.trim(), password, username.trim()).catch(() => {});
+      syncUserRealtimeRecord(res.user, res.wallet).catch(() => {});
+      syncUserFirestoreRecord(res.user, res.wallet).catch(() => {});
 
       setStoredToken(res.token);
       onSuccess(res.user, res.wallet);

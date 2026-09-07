@@ -170,25 +170,11 @@ export function createApp(): express.Express {
       availableBalance: 0,
       dailyEarningsBalance: 0,
       referralEarningsBalance: 0,
-      bonusBalance: 1000,
+      bonusBalance: 0,
       pendingWithdrawalsBalance: 0,
-      totalEarnings: 1000,
+      totalEarnings: 0,
       updatedAt: now
     };
-
-    // Credit UGX 1,000 Welcome Bonus transaction
-    db.transactions.push({
-      id: 'txn_' + crypto.randomBytes(6).toString('hex'),
-      userId: newUserId,
-      category: 'bonus',
-      type: 'credit',
-      amountUgx: 1000,
-      title: 'Welcome Bonus',
-      description: 'New account welcome bonus',
-      status: 'confirmed',
-      transactionId: 'BONUS_' + Date.now(),
-      createdAt: now
-    });
 
     // If referred, execute automated crediting to Referrer's account
     if (validatedReferrer && validatedReferrer !== newUserId) {
@@ -250,17 +236,6 @@ export function createApp(): express.Express {
         });
       }
     }
-
-    // Welcome bonus notification
-    db.notifications.push({
-      id: 'notif_' + crypto.randomBytes(6).toString('hex'),
-      userId: newUserId,
-      title: '🎁 Welcome Bonus: UGX 1,000 Credited!',
-      message: 'You have been awarded a UGX 1,000 new account starter bonus!',
-      type: 'bonus',
-      isRead: false,
-      createdAt: now
-    });
 
     // Welcome notification
     db.notifications.push({
@@ -398,25 +373,11 @@ export function createApp(): express.Express {
         availableBalance: 0,
         dailyEarningsBalance: 0,
         referralEarningsBalance: 0,
-        bonusBalance: 1000,
+        bonusBalance: 0,
         pendingWithdrawalsBalance: 0,
-        totalEarnings: 1000,
+        totalEarnings: 0,
         updatedAt: now
       };
-
-      // Credit UGX 1,000 Welcome Bonus transaction
-      db.transactions.push({
-        id: 'txn_' + crypto.randomBytes(6).toString('hex'),
-        userId: newUserId,
-        category: 'bonus',
-        type: 'credit',
-        amountUgx: 1000,
-        title: 'Welcome Bonus',
-        description: 'New account welcome bonus',
-        status: 'confirmed',
-        transactionId: 'BONUS_' + Date.now(),
-        createdAt: now
-      });
 
       if (validatedReferrer) {
         const referrerUser = db.users.find(u => u.id === validatedReferrer);
@@ -434,16 +395,6 @@ export function createApp(): express.Express {
           });
         }
       }
-
-      db.notifications.push({
-        id: 'notif_' + crypto.randomBytes(6).toString('hex'),
-        userId: newUserId,
-        title: '🎁 Welcome Bonus: UGX 1,000 Credited!',
-        message: 'You have been awarded a UGX 1,000 new account starter bonus!',
-        type: 'bonus',
-        isRead: false,
-        createdAt: now
-      });
 
       db.notifications.push({
         id: 'notif_' + crypto.randomBytes(6).toString('hex'),

@@ -34,7 +34,7 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
   const available = wallet?.availableBalance || 0;
   const daily = wallet?.dailyEarningsBalance || 0;
   const referral = wallet?.referralEarningsBalance || 0;
-  const bonus = wallet?.bonusBalance ?? 1000;
+  const bonus = wallet?.bonusBalance || 0;
   const pending = wallet?.pendingWithdrawalsBalance || 0;
   const total = wallet?.totalEarnings || (daily + referral + bonus);
 
@@ -89,17 +89,19 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
             </span>
           </div>
 
-          {/* New Account Bonus Banner */}
-          <div className="mt-2.5 px-3 py-1.5 rounded-xl bg-amber-50/90 border border-amber-200/80 flex items-center justify-between text-xs">
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs">🎁</span>
-              <span className="font-semibold text-amber-900 text-[11px]">Welcome Bonus:</span>
-              <span className="font-extrabold text-amber-900 text-xs">UGX {Number(bonus).toLocaleString()}</span>
+          {/* New Account Bonus Banner (if any) */}
+          {bonus > 0 && (
+            <div className="mt-2.5 px-3 py-1.5 rounded-xl bg-amber-50/90 border border-amber-200/80 flex items-center justify-between text-xs">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs">🎁</span>
+                <span className="font-semibold text-amber-900 text-[11px]">Welcome Bonus:</span>
+                <span className="font-extrabold text-amber-900 text-xs">UGX {Number(bonus).toLocaleString()}</span>
+              </div>
+              <span className="text-[10px] font-bold text-amber-800 bg-amber-100/90 px-2 py-0.5 rounded-md border border-amber-200/60">
+                Active
+              </span>
             </div>
-            <span className="text-[10px] font-bold text-amber-800 bg-amber-100/90 px-2 py-0.5 rounded-md border border-amber-200/60">
-              Active
-            </span>
-          </div>
+          )}
 
           {/* Sub-metric chips */}
           <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-100">
@@ -132,24 +134,26 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
               </div>
               <div>
                 <div className="text-xs font-bold text-slate-900">Total Account Value</div>
-                <div className="text-[10px] text-slate-500">Tasks + referrals + starter bonus</div>
+                <div className="text-[10px] text-slate-500">Tasks + referrals balance</div>
               </div>
             </div>
             <UgxCurrencyBadge amount={total} className="text-sm font-black text-blue-900" />
           </div>
 
-          <div className="flex items-center justify-between p-2.5 rounded-2xl bg-amber-50/70 border border-amber-200/70">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">
-                🎁
+          {bonus > 0 && (
+            <div className="flex items-center justify-between p-2.5 rounded-2xl bg-amber-50/70 border border-amber-200/70">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">
+                  🎁
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-slate-900">New Account Bonus</div>
+                  <div className="text-[10px] text-amber-700">Welcome bonus reward</div>
+                </div>
               </div>
-              <div>
-                <div className="text-xs font-bold text-slate-900">New Account Bonus</div>
-                <div className="text-[10px] text-amber-700">Welcome bonus reward</div>
-              </div>
+              <UgxCurrencyBadge amount={bonus} className="text-sm font-bold text-amber-800" />
             </div>
-            <UgxCurrencyBadge amount={bonus} className="text-sm font-bold text-amber-800" />
-          </div>
+          )}
 
           <div className="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-100">
             <div className="flex items-center gap-2">

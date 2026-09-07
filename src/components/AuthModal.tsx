@@ -148,26 +148,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         termsAccepted
       });
 
-      // Firebase Auth email registration
-      try {
-        await registerWithFirebaseEmail(email.trim(), password, username.trim());
-      } catch (fbErr: any) {
-        try {
-          await loginWithFirebaseEmail(email.trim(), password);
-        } catch (e) {}
-      }
-
       // Clear pending referral code on success
       try {
         localStorage.removeItem('pendingReferralCode');
       } catch (e) {}
 
-      try {
-        await syncUserRealtimeRecord(res.user, res.wallet);
-      } catch (e) {}
-      try {
-        await syncUserFirestoreRecord(res.user, res.wallet);
-      } catch (e) {}
+      // Fire background syncs non-blockingly
+      registerWithFirebaseEmail(email.trim(), password, username.trim()).catch(() => {});
+      syncUserRealtimeRecord(res.user, res.wallet).catch(() => {});
+      syncUserFirestoreRecord(res.user, res.wallet).catch(() => {});
 
       setStoredToken(res.token);
       onSuccess(res.user, res.wallet);
@@ -199,16 +188,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       });
 
       if (loginIdentifier.includes('@')) {
-        try {
-          await loginWithFirebaseEmail(loginIdentifier.trim(), loginPassword);
-        } catch (fbErr: any) {
-          try {
-            await registerWithFirebaseEmail(loginIdentifier.trim(), loginPassword, res.user.fullName || res.user.username);
-          } catch (e) {}
-        }
+        loginWithFirebaseEmail(loginIdentifier.trim(), loginPassword).catch(() => {});
       }
-
-      await syncUserRealtimeRecord(res.user, res.wallet);
+      syncUserRealtimeRecord(res.user, res.wallet).catch(() => {});
+      syncUserFirestoreRecord(res.user, res.wallet).catch(() => {});
 
       setStoredToken(res.token);
       onSuccess(res.user, res.wallet);

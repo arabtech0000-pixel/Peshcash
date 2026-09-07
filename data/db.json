@@ -9,10 +9,10 @@
       "role": "admin",
       "status": "active",
       "referralCode": "ASHIRAF77",
-      "passwordHash": "9f8c2e4b464f611b111fc0caaee7636bd9a0a967d9f68d3f15bc23ef40bab371",
-      "salt": "862682cca0d5a705da1ae4be81665c0d",
+      "passwordHash": "b022e89a1cf765acf323c503dd14e8c24e9be51501b879898360354346a487c7",
+      "salt": "b370b7ecbd50bd2157069395b2b7d0ea",
       "createdAt": "2026-09-06T17:02:51.954Z",
-      "updatedAt": "2026-09-07T04:51:18.155Z"
+      "updatedAt": "2026-09-07T05:09:35.193Z"
     },
     {
       "id": "usr_3b48214c3d0c",
@@ -152,6 +152,21 @@
       "salt": "c29fb4fc15e4c1fbd5f07b85becc0843",
       "createdAt": "2026-09-07T04:44:36.689Z",
       "updatedAt": "2026-09-07T04:44:36.689Z"
+    },
+    {
+      "id": "usr_791777dffa16",
+      "fullName": "Test Clean",
+      "username": "testclean",
+      "phone": "+256700000001",
+      "email": "testclean@example.com",
+      "role": "user",
+      "status": "pending_activation",
+      "referralCode": "TEST654C",
+      "withdrawalPhone": "+256700000001",
+      "passwordHash": "643cdcbf986f835f35ed5e9ef631567cfc4c1aa5d3c5d5cb45493b0e3100e559",
+      "salt": "403b6c6e8965153eae58eb858ca0263c",
+      "createdAt": "2026-09-07T05:09:35.194Z",
+      "updatedAt": "2026-09-07T05:09:35.194Z"
     }
   ],
   "wallets": {
@@ -163,7 +178,7 @@
       "bonusBalance": 1000,
       "pendingWithdrawalsBalance": 0,
       "totalEarnings": 11000,
-      "updatedAt": "2026-09-07T04:44:56.614Z"
+      "updatedAt": "2026-09-07T05:06:45.111Z"
     },
     "usr_3b48214c3d0c": {
       "userId": "usr_3b48214c3d0c",
@@ -173,7 +188,7 @@
       "bonusBalance": 1000,
       "pendingWithdrawalsBalance": 0,
       "totalEarnings": 6000,
-      "updatedAt": "2026-09-07T04:38:12.986Z"
+      "updatedAt": "2026-09-07T04:58:23.942Z"
     },
     "usr_d4965bd9c952": {
       "userId": "usr_d4965bd9c952",
@@ -183,7 +198,7 @@
       "bonusBalance": 1000,
       "pendingWithdrawalsBalance": 0,
       "totalEarnings": 1000,
-      "updatedAt": "2026-09-07T04:38:12.986Z"
+      "updatedAt": "2026-09-07T04:58:23.943Z"
     },
     "usr_0db5b448b0fe": {
       "userId": "usr_0db5b448b0fe",
@@ -193,7 +208,7 @@
       "bonusBalance": 1000,
       "pendingWithdrawalsBalance": 0,
       "totalEarnings": 1000,
-      "updatedAt": "2026-09-07T04:38:12.986Z"
+      "updatedAt": "2026-09-07T04:58:23.943Z"
     },
     "usr_6977869c7fb4": {
       "userId": "usr_6977869c7fb4",
@@ -203,7 +218,7 @@
       "bonusBalance": 1000,
       "pendingWithdrawalsBalance": 0,
       "totalEarnings": 6000,
-      "updatedAt": "2026-09-07T04:38:12.987Z"
+      "updatedAt": "2026-09-07T04:58:23.943Z"
     },
     "usr_44f53a7ebeae": {
       "userId": "usr_44f53a7ebeae",
@@ -213,7 +228,7 @@
       "bonusBalance": 1000,
       "pendingWithdrawalsBalance": 0,
       "totalEarnings": 1000,
-      "updatedAt": "2026-09-07T04:38:12.987Z"
+      "updatedAt": "2026-09-07T04:58:23.943Z"
     },
     "usr_e0d2f93f4337": {
       "userId": "usr_e0d2f93f4337",
@@ -223,7 +238,7 @@
       "bonusBalance": 1000,
       "pendingWithdrawalsBalance": 0,
       "totalEarnings": 1000,
-      "updatedAt": "2026-09-07T04:38:12.987Z"
+      "updatedAt": "2026-09-07T04:58:23.943Z"
     },
     "usr_0b606dc45e75": {
       "userId": "usr_0b606dc45e75",
@@ -233,7 +248,7 @@
       "bonusBalance": 1000,
       "pendingWithdrawalsBalance": 0,
       "totalEarnings": 1000,
-      "updatedAt": "2026-09-07T04:38:12.987Z"
+      "updatedAt": "2026-09-07T04:58:23.944Z"
     },
     "usr_aa47fb148d2e": {
       "userId": "usr_aa47fb148d2e",
@@ -243,7 +258,7 @@
       "bonusBalance": 1000,
       "pendingWithdrawalsBalance": 0,
       "totalEarnings": 1000,
-      "updatedAt": "2026-09-07T04:38:12.987Z"
+      "updatedAt": "2026-09-07T04:58:23.944Z"
     },
     "usr_cbac9a0f4956": {
       "userId": "usr_cbac9a0f4956",
@@ -253,7 +268,17 @@
       "bonusBalance": 1000,
       "pendingWithdrawalsBalance": 0,
       "totalEarnings": 1000,
-      "updatedAt": "2026-09-07T04:44:38.964Z"
+      "updatedAt": "2026-09-07T04:58:23.944Z"
+    },
+    "usr_791777dffa16": {
+      "userId": "usr_791777dffa16",
+      "availableBalance": 0,
+      "dailyEarningsBalance": 0,
+      "referralEarningsBalance": 0,
+      "bonusBalance": 0,
+      "pendingWithdrawalsBalance": 0,
+      "totalEarnings": 0,
+      "updatedAt": "2026-09-07T05:09:35.194Z"
     }
   },
   "tasks": [
@@ -644,6 +669,15 @@
       "type": "activation",
       "isRead": false,
       "createdAt": "2026-09-07T04:44:36.689Z"
+    },
+    {
+      "id": "notif_0a8d827c6a31",
+      "userId": "usr_791777dffa16",
+      "title": "Welcome to Pesa Cash!",
+      "message": "Your account is created and pending activation. Complete the one-time UGX 10,000 Mobile Money activation to unlock daily tasks & payouts.",
+      "type": "activation",
+      "isRead": false,
+      "createdAt": "2026-09-07T05:09:35.194Z"
     }
   ],
   "transactions": [
@@ -816,7 +850,11 @@
     "3bea930df23387a5c9edc7979405f2a4fa52469224dbd747246b81bab21c07c7": "usr_0b606dc45e75",
     "27d0665ce770de8f329d3c4ad7f5816fb0e7e192d5f3453699fbb9e786f74469": "usr_aa47fb148d2e",
     "358ed92003779ce1757bdc3cf7ae699cfeaf7c4f50fa97178d6c8bf9ac1b8bef": "usr_admin_ashiraf",
-    "47b18ccac4350785e32f0caae69e12de4c0ec365f40b75b4f1f5dabb4b9013aa": "usr_cbac9a0f4956"
+    "47b18ccac4350785e32f0caae69e12de4c0ec365f40b75b4f1f5dabb4b9013aa": "usr_cbac9a0f4956",
+    "c91107207a7daccf7efc78b8a6efd95231645c176825298271ddf6d3261a3880": "usr_admin_ashiraf",
+    "ab93b80a35371abca6aaf7e41a70e91b27fbff54a93182931a22230d36ac9c75": "usr_admin_ashiraf",
+    "9f1a867cd97417d4cda81b72d3e9ffc0ae89e849e85da722184c03627d81d292": "usr_admin_ashiraf",
+    "374908f38a48f739a37c37413095c8b8a07d89ab0459e5fbec74a7e306910324": "usr_791777dffa16"
   },
   "systemSettings": {
     "maintenanceMode": false,

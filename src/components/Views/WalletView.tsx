@@ -39,7 +39,7 @@ export const WalletView: React.FC<WalletViewProps> = ({
 
   const isAccountActive = user?.status === 'active';
   const available = wallet?.availableBalance || 0;
-  const bonus = wallet?.bonusBalance ?? 1000;
+  const bonus = wallet?.bonusBalance || 0;
   const total = wallet?.totalEarnings || (available + bonus);
   const daily = wallet?.dailyEarningsBalance || 0;
   const referral = wallet?.referralEarningsBalance || 0;
@@ -49,7 +49,6 @@ export const WalletView: React.FC<WalletViewProps> = ({
     { id: 'all', label: 'All Transactions' },
     { id: 'task_earning', label: 'Task Earnings' },
     { id: 'referral_earning', label: 'Referral Rewards' },
-    { id: 'bonus', label: 'Welcome Bonus' },
     { id: 'withdrawal', label: 'Withdrawals' },
     { id: 'activation_fee', label: 'Activation Fee' }
   ];
@@ -184,17 +183,19 @@ export const WalletView: React.FC<WalletViewProps> = ({
           </span>
         </div>
 
-        {/* Welcome Bonus Banner */}
-        <div className="relative z-10 mt-3 p-2.5 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-between text-xs text-blue-100">
-          <div className="flex items-center gap-1.5">
-            <span className="text-sm">🎁</span>
-            <span className="font-semibold text-white">Welcome Bonus:</span>
-            <span className="font-extrabold text-amber-300">UGX {Number(bonus).toLocaleString()}</span>
+        {/* Welcome Bonus Banner (if any) */}
+        {bonus > 0 && (
+          <div className="relative z-10 mt-3 p-2.5 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-between text-xs text-blue-100">
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm">🎁</span>
+              <span className="font-semibold text-white">Welcome Bonus:</span>
+              <span className="font-extrabold text-amber-300">UGX {Number(bonus).toLocaleString()}</span>
+            </div>
+            <span className="text-[10px] font-bold text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-400/30">
+              Credited
+            </span>
           </div>
-          <span className="text-[10px] font-bold text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-400/30">
-            Credited
-          </span>
-        </div>
+        )}
 
         {/* Breakdown sub-cards */}
         <div className="relative z-10 grid grid-cols-2 gap-2 mt-5 pt-4 border-t border-white/10">

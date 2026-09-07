@@ -134,7 +134,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Subtitle */}
           <p className="text-sm sm:text-lg text-blue-100/90 max-w-2xl mx-auto leading-relaxed mb-8">
-            Complete high-paying sponsor surveys, watch sponsored brand ads, spin the daily lucky wheel, and earn <span className="text-amber-300 font-bold">UGX 5,000</span> for every verified friend you invite. Plus get a <span className="text-amber-300 font-bold">UGX 1,000</span> new account welcome bonus upon sign-up!
+            Complete high-paying sponsor surveys, watch sponsored brand ads, spin the daily lucky wheel, and earn <span className="text-amber-300 font-bold">UGX 5,000</span> for every verified friend you invite direct to your MTN &amp; Airtel Mobile Money wallet!
           </p>
 
           {/* Primary Action Buttons */}
